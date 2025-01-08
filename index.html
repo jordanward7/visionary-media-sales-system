@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Visionary Media Sales System</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            max-width: 400px; 
+            margin: 0 auto; 
+            padding: 20px; 
+        }
+        input { 
+            width: 100%; 
+            padding: 10px; 
+            margin: 10px 0; 
+        }
+        button { 
+            width: 100%; 
+            padding: 10px; 
+            background-color: #007bff; 
+            color: white; 
+            border: none; 
+        }
+    </style>
+</head>
+<body>
+    <div id="login">
+        <h2>Visionary Media Sales System</h2>
+        <input type="email" id="email" placeholder="Email">
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="login()">Login</button>
+    </div>
+
+    <div id="dashboard" style="display:none;">
+        <h2>Sales Dashboard</h2>
+        <div id="userInfo"></div>
+        <button onclick="logout()">Logout</button>
+
+        <h3>Sales Tracker</h3>
+        <form id="leadForm">
+            <input type="text" placeholder="Business Name">
+            <input type="text" placeholder="Phone Number">
+            <button type="submit">Add Lead</button>
+        </form>
+
+        <h3>Leads</h3>
+        <ul id="leadsList"></ul>
+    </div>
+
+    <script>
+        const users = [
+            { email: 'sales@visionarymedia.com', password: 'sales123', role: 'sales' },
+            { email: 'admin@visionarymedia.com', password: 'admin123', role: 'admin' }
+        ];
+
+        let currentUser = null;
+        let leads = [];
+
+        function login() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            const user = users.find(u => u.email === email && u.password === password);
+            
+            if (user) {
+                currentUser = user;
+                document.getElementById('login').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'block';
+                document.getElementById('userInfo').innerHTML = `Welcome, ${email}`;
+            } else {
+                alert('Invalid login');
+            }
+        }
+
+        function logout() {
+            currentUser = null;
+            document.getElementById('login').style.display = 'block';
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('email').value = '';
+            document.getElementById('password').value = '';
+        }
+
+        document.getElementById('leadForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const businessName = this.querySelector('input[placeholder="Business Name"]').value;
+            const phoneNumber = this.querySelector('input[placeholder="Phone Number"]').value;
+            
+            if (businessName && phoneNumber) {
+                leads.push({ businessName, phoneNumber });
+                updateLeadsList();
+                this.reset();
+            }
+        });
+
+        function updateLeadsList() {
+            const leadsList = document.getElementById('leadsList');
+            leadsList.innerHTML = '';
+            leads.forEach((lead, index) => {
+                const li = document.createElement('li');
+                li.textContent = `${lead.businessName} - ${lead.phoneNumber}`;
+                leadsList.appendChild(li);
+            });
+        }
+    </script>
+</body>
+</html>
